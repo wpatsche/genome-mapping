@@ -1,0 +1,36 @@
+Trabalho I - Alinhamento genético - Memória Compartilhada
+Peso 20 pontos
+Individual
+
+==================================================================
+Desenvolver um programa que:
+-----------------------------
+
+1- Encontre a quantidade de vezes que cada posição é igual entre os 10
+genomas do Corona Virus 
+
+2- Encontre a quantidade de vezes que a sequência mais encontrada está 
+presente no genomas
+
+3- Execute em paralelo utilizando o compilador gcc com pthread
+
+4- Receba como argumento a qtde de processos que devem ser criados
+
+
+==================================================================
+Entrega do trabalho:
+--------------------
+- arquivo zipado no portal contendo:
+	- arquivo (pthread.c) 	 - implementação paralela com pthread
+	- arquivo (Makefile) 	 - make
+	- arquivo tabela (spped-up_e_eficiencia.ods) - calculos de speed-up e
+eficiência com a média de 10 execuções e descrição do computador
+
+
+==================================================================
+Avaliação do trabalho:
+--------------------
+ 5 pontos - Funcionalidade, lógica de paralelização / divisão do trabalho.
+15 pontos - Ganhos de tempo(speed-up) e eficiência obtida com a paralelização.
+
+==================================================================
