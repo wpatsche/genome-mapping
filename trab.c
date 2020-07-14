@@ -7,28 +7,32 @@
 #include <math.h>
 
 #define TAM 30300
-
+void create_matriz();
 int carrega_genoma();
 void *compara_genoma(void *arg);
-int exibe_resultado();
+int display_result();
 void *compara_sequencia(void *arg);
 
 int igual, dif, NUMTHREAD;
-char genoma1[TAM];
-char genoma2[TAM];
-char genoma3[TAM];
-char genoma4[TAM];
-char genoma5[TAM];
-char genoma6[TAM];
-char genoma7[TAM];
-char genoma8[TAM];
-char genoma9[TAM];
-char genoma10[TAM];
+char genoma[10][TAM];
+int equals[10][10];
+int sequence[10][10];
+
 
 int main(int argc, char *argv[])
 {
-
+    tempo1();
     NUMTHREAD = atoi(argv[1]);
+
+    if (NUMTHREAD == 0)
+    {
+      create_matriz();
+      carrega_genoma();
+      modo_sequencial();
+      tempo2();
+      display_result();
+      tempoFinal("milissegundos", argv[0], MSGLOG);
+    }
 
     if (NUMTHREAD < 1)
     {
@@ -38,7 +42,7 @@ int main(int argc, char *argv[])
 
     pthread_t pidt[NUMTHREAD];
     int x, y, inicio[NUMTHREAD + 1];
-
+    create_matriz();
     carrega_genoma();
 
     inicio[0] = 0;
@@ -53,14 +57,21 @@ int main(int argc, char *argv[])
     for (i = 0; i < NUMTHREAD; i++)
         pthread_join(pidt[i], NULL);
 
-    exibe_resultado();
+    tempo2();
+    tempoFinal("milissegundos", argv[0], MSGLOG);
 
-    inicio[0] = 0;
+}
 
-    for (i = 0; i < NUMTHREAD; i++)
+
+void create_matriz()
+{
+    for (int i = 0; i < 10; i++)
     {
-        pthread_create(&pidt[i], NULL, compara_sequencia, (void *)&inicio[i]);
-        inicio[i + 1] = inicio[i] + TAM / NUMTHREAD;
+        for (int j = 0; j < 10; j++)
+        {
+            equals[i][j] = 0;
+            sequence[i][j] = 0;
+        }
     }
 }
 
@@ -68,186 +79,80 @@ int main(int argc, char *argv[])
 //===============================================================
 int carrega_genoma()
 {
-
+    int j = 0;
     int i = 0;
-    char c;
+    for(i=0; i<10; i++){
+        int aux = i;
+        char folder[100] = "genomas/";
+        char * file_to_open = strcat(folder, arquivos[aux]);
+        file_to_open = strcat(file_to_open, ".txt");
+        int j=0;
+        char c;
 
-    //genoma 1
-    FILE *file1;
+        FILE *file;
+        file = fopen(file_to_open,"r");	  
+        
+        j = 0;        
+        while((c=getc(file)) != EOF){                     //le um nucleotideo do primeiro genoma enquanto não chegor ao final do arquivo
+        
+            genoma[aux][j]=c;   
+            j++;
+        }
+        //fecha arquivo
+        fclose(file);
+	}
 
-    //abre arquivo para leitura
-    file1 = fopen("genomas/AY278741.txt", "r");
-
-    //carrega o conteudo do arquivo no vetor genoma1
-    i = 0;
-    while ((c = getc(file1)) != EOF)
-    { //le um nucleotideo do primeiro genoma enquanto não chegor ao final do arquivo
-
-        genoma1[i] = c;
-        i++;
+    for(int k=0; k<10; k++ ){
+        if (k > 2{
+            compara_genoma(genoma[k],genoma[j], k, j)
+        })
+        j = j + 1;
     }
 
-    //fecha arquivo
-    fclose(file1);
-
-    //genoma 2
-    FILE *file2;
-
-    //abre arquivo para leitura
-    file2 = fopen("genomas/KY417146.txt", "r");
-
-    //carrega o conteudo do arquivo no vetor genoma1
-    i = 0;
-    while ((c = getc(file2)) != EOF)
-    {
-
-        genoma2[i] = c;
-        i++;
-    }
-
-    //fecha arquivo
-    fclose(file2);
-
-    // arq 3
-    FILE *file3;
-    file3 = fopen("genomas/MK211376.txt", "r");
-
-    i = 0;
-    while ((c = getc(file3)) != EOF)
-    {
-
-        genoma3[i] = c;
-        i++;
-    }
-    fclose(file3);
-
-    //arq 4
-    FILE *file4;
-    file4 = fopen("genomas/MN908947.txt", "r");
-
-    i = 0;
-    while ((c = getc(file4)) != EOF)
-    {
-
-        genoma4[i] = c;
-        i++;
-    }
-    fclose(file4);
-
-    //arq 5
-    FILE *file5;
-    file5 = fopen("genomas/MN996532.txt", "r");
-
-    i = 0;
-    while ((c = getc(file5)) != EOF)
-    {
-
-        genoma5[i] = c;
-        i++;
-    }
-    fclose(file5);
-
-    //arq 6
-    FILE *file6;
-    file6 = fopen("genomas/USA-AZ1-2020.txt", "r");
-
-    i = 0;
-    while ((c = getc(file6)) != EOF)
-    {
-
-        genoma6[i] = c;
-        i++;
-    }
-    fclose(file6);
-
-    //arq 7
-    FILE *file7;
-    file7 = fopen("genomas/USA-CA1-2020.txt", "r");
-
-    i = 0;
-    while ((c = getc(file7)) != EOF)
-    {
-
-        genoma7[i] = c;
-        i++;
-    }
-    fclose(file7);
-
-    //arq 8
-    FILE *file8;
-    file8 = fopen("genomas/USA-IL1-2020.txt", "r");
-
-    i = 0;
-    while ((c = getc(file8)) != EOF)
-    {
-
-        genoma8[i] = c;
-        i++;
-    }
-    fclose(file8);
-
-    //arq 9
-    FILE *file9;
-    file9 = fopen("genomas/USA-TX1-2020.txt", "r");
-
-    i = 0;
-    while ((c = getc(file9)) != EOF)
-    {
-
-        genoma9[i] = c;
-        i++;
-    }
-    fclose(file9);
-
-    //arq 10
-    FILE *file10;
-    file10 = fopen("genomas/WHUHAN-WH04-2020.txt", "r");
-
-    i = 0;
-    while ((c = getc(file10)) != EOF)
-    {
-
-        genoma10[i] = c;
-        i++;
-    }
-    fclose(file10);
 }
 
 //funcao compara
 //  o objetivo desta função é comparar cada genoma entre os arquivos contendo
 //os genomas
-void *compara_genoma(void *arg)
-{
-    int i = 0, x = 0, pos = *((int *)arg);
+int *compara_genoma(char genoma1[], char genoma2[], int pos1, int pos2,  void *args)
+{       
+	int i;
+    int igual = 0, dif = 0, aux = 0, res = 0;
 
-    igual = 0;
-    dif = 0;
 
-    printf("\n thread inicia na pos: %d", pos);
-
-    for (i = 0; i < (TAM / NUMTHREAD + pos); i++)
+    for (int i = 0; i < TAM; i++)
     {
-
-        //para fazer a soma dos numeros, devera ser idependente de acordo com cada
-        // comparação, a dica é fazer uma matriz para guardar os resultados
-
-        //pode fazer um switch case ao invés do if
-
-        if (genoma1[i] == genoma2[i])
-        { //compara os dois nucleotideos
-            igual++;
-        }
-        else
+        if (genoma1[i] != NULL)
         {
-            dif++;
-            //scanf("%d", &x);
-            //sleep(1);
+            if ((genoma1[i] == genoma2[i]))
+            {
+                aux++;
+                igual++;
+            }
+            else
+            {
+                if (aux > res)
+                {
+
+                    res = aux;
+                    inicio = i - res;
+                    aux = 0;
+                }
+                dif++;
+            }
         }
     }
+    if (aux > res)
+    {
+        res = aux;
+        inicio = i - res;
+        aux = 0;
+    }
+    
+    equals[pos1][pos2] = igual; 
+    sequence[pos1][pos2] = res;
 }
 
-//exibe resultado
-//===============================================================
 int exibe_resultado()
 {
 
@@ -293,4 +198,23 @@ void *compara_sequencia(void *arg)
         }
     }
     printf("\n\n");
+}
+
+void display_result()
+{
+    int maior=0;
+
+    printf("\n MATRIZ DE RESULTADOS\n");
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if(maior<sequence[i][j]){
+                maior= sequence[i][j];    
+            }
+            printf(" %5d|", sequence[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\nMaior sequência de todas = %d, \n",maior);
 }
